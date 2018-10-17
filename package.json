@@ -1,0 +1,15 @@
+{
+  "name": "chesstrainer",
+  "version": "1.0.0",
+  "description": "Chess Trainer",
+  "main": "app.js",
+  "dependencies": {
+    "npm": "^6.4.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Michał Niczyporuk",
+  "license": "ISC"
+}

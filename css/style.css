@@ -1,0 +1,122 @@
+body {
+    font-family: sans-serif;
+  }
+
+  #promotion-dialog {
+    display: none;
+  }
+  .ui-dialog {
+    padding: 0 !important;
+    width: 320px !important;
+    height: 80px !important;
+    border: 0 !important;
+  }
+
+  .ui-dialog-content {
+    padding: 0 !important;
+    width: 320px !important;
+    height: 80px !important;
+    border: 0 !important;
+  }
+
+  .ui-corner-all {
+    border-radius: 0;
+  }
+
+  .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    border: 0 !important;
+  }
+
+  #promote-to .ui-selecting {
+    background: #FECA40;
+  }
+
+  #promote-to .ui-selected {
+    background: #F39814;
+    color: white;
+  }
+
+  #promote-to {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 320px;
+    height: 80px;
+  }
+
+  #promote-to li {
+    margin: 0;
+    padding: 0;
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    background-color: cornflowerblue;
+    float: left !important;
+  }
+
+  .ui-dialog .ui-dialog-content {
+    padding: 0;
+  }
+
+  .no-close .ui-dialog-titlebar-close {
+    display: none;
+  }
+
+  .noTitleStuff .ui-dialog-titlebar {
+    display: none;
+  }
+
+  .promotion-piece {
+    width: 80px;
+    height: 80px;
+  }
+
+  .piece-name {
+    display: none;
+  }
+
+.board{
+    width: 600px;
+    margin-bottom: 2px;
+}
+
+  .scoreBarOuter {
+  height: 30px;
+  width: 596px;
+  background-image: linear-gradient(90deg, #cd5c5c 33.33%, #ffea42 33.33%,  #ffea42 66.67%,  #3CB371 66.67%);
+
+  margin-bottom: 2px;
+
+  border: 2px solid #404040;
+    
+    position: relative;
+    overflow: hidden;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.scoreBarInner, .scoreBarInner div {
+    width: 30px;
+    overflow: hidden;
+    left: -2px;
+    position: absolute;
+}
+
+.scoreBarInner {
+    border: 3px solid #404040;
+    width: 6px;
+    background-color: #404040;
+    bottom: 0;
+    height: 30px;
+}
+
+.scoreBarInner div {
+    border: 2px solid orange;
+    border-bottom-width: 0;
+    background-color: orange;
+    
+    top: 0;
+    width: 100%;
+    height: 5px;
+}

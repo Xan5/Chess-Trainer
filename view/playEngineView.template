@@ -1,0 +1,122 @@
+<div>
+  <div class="row">
+  <br>
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="col-md-10">
+                <div id="board" class="board"></div>
+                <div id="promotion-dialog">
+                  <ol id="promote-to">
+                    <li class="ui-state-default"><span class="piece-name">q</span><img class="promotion-piece-q promotion-piece" /></li>
+                    <li class="ui-state-default"><span class="piece-name">r</span><img class="promotion-piece-r promotion-piece" /></li>
+                    <li class="ui-state-default"><span class="piece-name">n</span><img class="promotion-piece-n promotion-piece" /></li>
+                    <li class="ui-state-default"><span class="piece-name">b</span><img class="promotion-piece-b promotion-piece" /></li>
+                  </ol>
+                </div>
+                <div id="scoreBar">
+                    <div class="scoreBarOuter">
+                        <div class="scoreBarInner"></div>
+                        </div>        
+                    </div>
+                </div>
+                
+            </div>
+            <div class="col-md-2">
+                <div id="engineStatus"></div>
+                <div id="pgn"></div>
+                <hr>
+            </div>
+      </div>
+
+      
+    </div></div>
+    <div class="row">
+      <form class="form-horizontal">
+        <div class="form-group">
+          <label for="skillLevel" class="control-label col-xs-4 col-sm-6 col-md-4">Skill Level (0-20)</label>
+          <div class="col-xs-4 col-sm-6 col-md-4">
+            <input type="number" class="form-control" id="skillLevel" value="0">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="color" class="control-label col-xs-4 col-sm-6 col-md-4">I play</label>
+          <div class="col-xs-4 col-sm-6 col-md-4">
+            <div class="btn-group" data-toggle="buttons">
+              <label class="btn btn-primary active" id="color-white"><input type="radio" name="color">White</label>
+              <label class="btn btn-primary" id="color-black"><input type="radio" name="color">Black</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="showScore" class="control-label col-xs-4 col-sm-6 col-md-4">Show score</label>
+          <div class="col-xs-4 col-sm-6 col-md-4">
+            <input type="checkbox" class="form-control" id="showScore" checked>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="color" class="control-label col-xs-4 col-sm-6 col-md-4"></label>
+          <div class="col-xs-4 col-sm-6 col-md-4">
+                <button type="button" class="btn btn-primary" onclick="undo()">Undo</button>
+          
+            <button type="button" class="btn btn-primary" onclick="newGame()">New Game</button>
+          </div>
+        </div>
+      </form>
+  </div>
+</div>
+  <script src="js/gameEngine.js"></script>
+  <script>
+    var wait_for_script;
+    var newGame = function (){};
+    
+    /// We can load Stockfish.js via Web Workers or directly via a <script> tag.
+    /// Web Workers are better since they don't block the UI, but they are not always avaiable.
+    (function fix_workers()
+    {
+      var script_tag;
+      /// Does the browser support web workers?  If not, include stockfish.js directly.
+      if (!Worker || (location && location.protocol === "file:")) {
+        var script_tag  = document.createElement("script");
+        script_tag.type ="text/javascript";
+        script_tag.src  = "js/stockfish.js";
+        script_tag.onload = init;
+        document.getElementsByTagName("head")[0].appendChild(script_tag);
+        wait_for_script = true;
+      }
+    }());
+   
+      
+    function init()
+    {
+      var game = gameEngine();
+      undo = function undo(){
+          game.undo();
+      }
+
+      newGame = function newGame() {
+          var baseTime = parseFloat($('#timeBase').val()) * 60;
+          var inc = parseFloat($('#timeInc').val());
+          var skill = parseInt($('#skillLevel').val());
+          game.reset();
+          game.setTime(baseTime, inc);
+          game.setSkillLevel(skill);
+          game.setPlayerColor($('#color-white').hasClass('active') ? 'white' : 'black');
+          game.setDisplayScore($('#showScore').is(':checked'));
+          game.start();
+      };
+      
+      //game.setSkillLevel
+      
+      document.getElementById("skillLevel").addEventListener("change", function ()
+      {
+          game.setSkillLevel(parseInt(this.value, 10));
+      });
+  
+      newGame();
+    }
+    
+    /// If we load Stockfish.js via a <script> tag, we need to wait until it loads.
+    if (!wait_for_script) {
+      document.addEventListener("DOMContentLoaded", init);
+    }
+  </script>
