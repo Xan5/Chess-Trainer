@@ -1,0 +1,78 @@
+<div>
+    <script src="js/chessboard.js"></script>
+    
+    <div class="row">
+        <br>
+            <div class="col-md-1 col-lg-2"></div>
+            <div class="col-md-7 col-lg-6">
+                <div id="board"  class="board context-menu-board"></div>
+                <div id="promotion-dialog">
+                  <ol id="promote-to">
+                    <li class="ui-state-default"><span class="piece-name">q</span><img class="promotion-piece-q promotion-piece" /></li>
+                    <li class="ui-state-default"><span class="piece-name">r</span><img class="promotion-piece-r promotion-piece" /></li>
+                    <li class="ui-state-default"><span class="piece-name">n</span><img class="promotion-piece-n promotion-piece" /></li>
+                    <li class="ui-state-default"><span class="piece-name">b</span><img class="promotion-piece-b promotion-piece" /></li>
+                  </ol>
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-2">
+                <ul class="list-group mb-3">
+                  <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                      <h5 class="my-0">Puzzle: </h5>
+                      <span class="text-muted">Number</span>
+                    </div>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                      <h6 class="my-0">Dificulity: </h6>
+                      <small class="text-muted">Number</small>
+                    </div>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                      <h6 class="my-0">Your ranking:</h6>
+                      <small class="text-muted">1562</small>
+                    </div>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between bg-light">
+                    <div >
+                      <h6 class="my-0">Last puzzle:</h6>
+                      <small class="text-success">+10</small>
+                    </div>
+                  </li>
+                </ul>
+      
+                <form class="card p-1">
+                  <div class="input-group">
+          
+                    <button type="submit" class="btn btn-lg btn-secondary btn-block">Show solution</button>
+
+                    <button type="button" class="btn btn-lg btn-secondary btn-block">Give up</button>
+          
+                  </div>
+                </form>
+            </div>
+            <div class="col-md-1 col-lg-2"></div>
+      </div>
+<script src="js/puzzleEngine.js"></script>
+    <script>     
+        (function init()
+        {
+          var game = puzzleEngine();
+          undo = function undo(){
+              game.undo();
+          }
+    
+          newPuzzle = function newPuzzle() {
+              game.reset();
+              //game.setSkillLevel(20);
+              //game.setPlayerColor($('#color-white').hasClass('active') ? 'white' : 'black');
+              //game.setDisplayScore($('#showScore').is(':checked'));
+              game.start();
+          };
+      
+          newPuzzle();
+        }());
+      </script>
+</div>

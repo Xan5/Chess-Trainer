@@ -2,28 +2,25 @@
     var app = $.sammy(function () {
 
         this.get('#/', function (context) {
-            context.render('/view/puzzlePage.template', {
+            context.render('/view/puzzleView.html', {
                 'myVariable': 'Some value'
             }, function(output) {
-                console.log(output);
                 $('#container').html(output);
             });
         });
 
         this.get('#play', function (context) {
-            context.render('/view/playEngineView.template', {
+            context.render('/view/playEngineView.html', {
                 'myVariable': 'Some value'
             }, function(output) {
-                console.log(output);
                 $('#container').html(output);
             });
         });
 
         this.get('#puzzle', function (context) {
-            context.render('/view/puzzlePage.template', {
+            context.render('/view/puzzleView.html', {
                 'myVariable': 'Some value'
             }, function(output) {
-                console.log(output);
                 $('#container').html(output);
             });
         });

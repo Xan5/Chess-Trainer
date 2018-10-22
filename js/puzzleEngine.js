@@ -3,13 +3,7 @@ function puzzleEngine(options) {
     var game = new Chess();
     var board, promote_to, promoting, piece_theme, promotionMove;
     var moveList, fen, moveNumber;
-    /// Loading Stockfish via Web Workers.
-    var engine = typeof STOCKFISH === "function" ? STOCKFISH() : new Worker(options.stockfishjs || 'js/stockfish.js');
-    var engineStatus = {};
-    var displayScore = false;
-    var time = { wtime: 300000, btime: 300000, winc: 2000, binc: 2000 };
     var playerColor = 'white';
-    var isEngineRunning = false;
     piece_theme = '../img/chesspieces/wikipedia/{piece}.png';
     promotion_dialog = $('#promotion-dialog');
     promoting = false;
@@ -108,8 +102,6 @@ function puzzleEngine(options) {
         moveNumber++;
         game.move(move);
         moveNext();
-
-        //prepareMove();
     };
 
     var moveNext = function() {
@@ -275,14 +267,8 @@ function puzzleEngine(options) {
             playerColor = color;
             this.setPlayerColor(color);
             //
-            //uciCmd('ucinewgame');
-            //uciCmd('isready');
-            //uciCmd("position startpos fen "+ fen);
-            console.log(moveList);
             game.load(fen);
             board.position(fen);
-            engineStatus.engineReady = false;
-            engineStatus.search = null;
             promoting = false;
         },
         undo: function() {

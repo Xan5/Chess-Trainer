@@ -4,7 +4,9 @@
   "description": "Chess Trainer",
   "main": "app.js",
   "dependencies": {
-    "npm": "^6.4.1"
+    "connect": "^3.6.6",
+    "npm": "^6.4.1",
+    "serve-static": "^1.13.2"
   },
   "devDependencies": {},
   "scripts": {

@@ -36,7 +36,7 @@ function gameEngine(options) {
     }, 1000);
 
     function uciCmd(cmd, which) {
-        console.log("UCI: " + cmd);
+        //console.log("UCI: " + cmd);
         
         (which || engine).postMessage(cmd);
     }
@@ -74,7 +74,7 @@ function gameEngine(options) {
                 if (score > 20) score = 20;
                 if (score < -20) score = -20;
                 score += 20;
-                score *= 15;
+                score *= 13.45;
                 lastScore = score;
                 
                 setScoreBar(score);
@@ -146,7 +146,7 @@ function gameEngine(options) {
         } else {
             line = event;
         }
-        console.log("Reply: " + line)
+        //console.log("Reply: " + line)
         if(line == 'uciok') {
             engineStatus.engineLoaded = true;
         } else if(line == 'readyok') {
@@ -390,7 +390,7 @@ function gameEngine(options) {
             promoting = false;
             prepareMove();
             announced_game_over = false;
-            setScoreBar(300);
+            setScoreBar(269);
         },
         undo: function() {
             if(isEngineRunning)
