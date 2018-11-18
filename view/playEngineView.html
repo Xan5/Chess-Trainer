@@ -5,6 +5,41 @@
         <div class="col-md-1 col-lg-2"></div>
         <div class="col-md-7 col-lg-6">
                 <div id="board" class="context-menu-board board"></div>
+                <div id="start-dialog" class="ui-dialog dialog wrapper" title="Create new game">
+                        <div class="dialog-content">
+                            <label>Difficulty level: </label>
+                            <div class="btn-group" role="group" id="skillLevel">
+                                <button type="button" class="btn btn-secondary active">1</button>
+                                <button type="button" class="btn btn-secondary">2</button>
+                                <button type="button" class="btn btn-secondary">3</button>
+                                <button type="button" class="btn btn-secondary">4</button>
+                                <button type="button" class="btn btn-secondary">5</button>
+                            </div>
+                            <p></p>
+                            <label>Side: </label>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-secondary active" id="color-white">White</button>
+                                <button type="button" class="btn btn-secondary">Black</button>
+                            </div>
+                            <p></p>
+                            <div>
+                                <label for="showScore" class="control-label">Show score</label>
+                                <input type="checkbox" id="showScore" checked>        
+                            </div>
+                            <button type="button" class="btn btn-secondary dialog-button" onclick="newGame()">New Game</button>
+                        </div>
+                </div>
+                <div id="end-dialog" class="ui-dialog dialog wrapper" title="Game over">
+                    <div class="dialog-content">
+                        <h5 id="end-info"></h5>
+                        <h3 id="end-winner"></h3>
+                        </br>
+                        <div>
+                            <button id="analyzeButton" type="button" class="btn btn-secondary dialog-button">Analyze</button>
+                            <button type="button" class="new-game-button btn btn-secondary dialog-button">New Game</button>
+                        </div>
+                    </div>
+            </div>
                 <div id="promotion-dialog">
                   <ol id="promote-to">
                     <li class="ui-state-default"><span class="piece-name">q</span><img class="promotion-piece-q promotion-piece" /></li>
@@ -20,53 +55,27 @@
                 </div>
         </div>
         <div class="col-md-3 col-lg-2">
-            <div id="engineStatus"></div>
-
-            <form class="form-horizontal">
-              <div class="form-group">
-                <label for="skillLevel" class="control-label col-xs-2 col-sm-4 col-md-4">Skill Level (0-20)</label>
-
-                  <input type="number" class="form-control" id="skillLevel" value="0">
-    
-              </div>
-              <div class="form-group">
-                  <label for="color" class="control-label col-xs-4 col-sm-6 col-md-4"></label>
-           
-                    
-                  <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-primary active" id="color-white"><input type="radio" name="color">White</label>
-                    <label class="btn btn-primary" id="color-black"><input type="radio" name="color">Black</label>
-                  </div>
-          
-              </div>
-              <div class="form-group">
-                <label for="showScore" class="control-label col-xs-4 col-sm-6 col-md-4">Show score</label>
-         
-                  <input type="checkbox" class="form-control" id="showScore" checked>
-           
-              </div>
-              <form class="card p-1">
-                  <div class="input-group">
-          
-                      <button type="button" class="btn btn-lg btn-secondary btn-block" onclick="undo()">Undo</button>
-                      <button type="button" class="btn btn-lg btn-secondary btn-block" onclick="newGame()">New Game</button>
-
-                  </div>
-              </form>
-              
+            <ul id="pgn" class="list-group-item table list-group mb-3"></ul>
+            <form class="card p-1">
+                <div class="input-group">
+                    <button id="undoButton" type="button" class="btn btn-lg btn-secondary btn-block" onclick="undo()">Undo</button>
+                    <button type="button" class="new-game-button btn btn-lg btn-secondary btn-block">New Game</button>
+                </div>
             </form>
-
-            <h3>Moves:</h3>
-            <div id="pgn"></div>
-            <hr>
+            <h4 id="engineStatus"></h4>
         </div>
         <div class="col-md-1 col-lg-2"></div>
+        <ul class="contextmenu">
+                <li><a type="button" onclick="getFEN()">Copy FEN to clipboard</a></li>
+                <li><a type="button" onclick="getPGN()">Copy PGN to clipboard</a></li>
+              </ul>
   </div>
   <script src="../js/gameEngine.js"></script>
   <script>
     var wait_for_script;
     var newGame = function (){};
     
+
     /// We can load Stockfish.js via Web Workers or directly via a <script> tag.
     /// Web Workers are better since they don't block the UI, but they are not always avaiable.
     (function fix_workers()
@@ -82,8 +91,27 @@
         wait_for_script = true;
       }
     }());
-   
-      
+
+    function copyToClipboard(text) {
+        if (window.clipboardData && window.clipboardData.setData) {
+            return clipboardData.setData("Text", text); 
+        } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+            var textarea = document.createElement("textarea");
+            textarea.textContent = text;
+            textarea.style.position = "fixed";
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                return document.execCommand("copy");
+            } catch (ex) {
+                console.warn("Coping to clipboard failed.", ex);
+                return false;
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+    }
+
     (function init()
     {
       var game = gameEngine();
@@ -91,19 +119,25 @@
           game.undo();
       }
 
+      getFEN = function getFEN(){
+          var fen = game.getFEN();
+          copyToClipboard(fen);
+      }
+
+      getPGN = function getPGN(){
+          var pgn = game.getPGN();
+          copyToClipboard(pgn);
+      }
+
       newGame = function newGame() {
-          var baseTime = parseFloat($('#timeBase').val()) * 60;
-          var inc = parseFloat($('#timeInc').val());
-          var skill = parseInt($('#skillLevel').val());
+          var skill = parseInt($('#skillLevel  .active').text());
           game.reset();
-          game.setTime(baseTime, inc);
           game.setSkillLevel(skill);
           game.setPlayerColor($('#color-white').hasClass('active') ? 'white' : 'black');
           game.setDisplayScore($('#showScore').is(':checked'));
           game.start();
+
       };
-      
-      game.setSkillLevel
       
       document.getElementById("skillLevel").addEventListener("change", function ()
       {
@@ -118,29 +152,6 @@
       //document.addEventListener("DOMContentLoaded", init);
     }
 
-      $(function() {
-        $.contextMenu({
-            selector: '.context-menu-board', 
-            callback: function(key, options) {
-                var m = "clicked: " + key;
-                window.console && console.log(m) || alert(m); 
-            },
-            items: {
-                "edit": {name: "Edit", icon: "edit"},
-                "cut": {name: "Cut", icon: "cut"},
-               copy: {name: "Copy", icon: "copy"},
-                "paste": {name: "Paste", icon: "paste"},
-                "delete": {name: "Delete", icon: "delete"},
-                "sep1": "---------",
-                "quit": {name: "Quit", icon: function(){
-                    return 'context-menu-icon context-menu-icon-quit';
-                }}
-            }
-        });
-
-        $('.context-menu-board').on('click', function(e){
-            console.log('clicked', this);
-        })    
-    });
+      
   </script>
 </div>
