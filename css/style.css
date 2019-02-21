@@ -5,11 +5,9 @@ body {
   #promotion-dialog {
     display: none;
   }
-  
+
   .ui-dialog {
     padding: 0 !important;
-    width: 320px !important;
-    height: 80px !important;
     border: 0 !important;
   }
 
@@ -136,6 +134,7 @@ body {
 
 .dialog {
   display: none;
+  position:fixed;
 }
 
 .dialog-content {
@@ -191,4 +190,40 @@ body {
 
 button:focus { 
   outline: none !important; 
+}
+
+.alingned-content{
+  text-align: center;
+  align-content: center;
+}
+
+.movesPanel{
+  margin-bottom: 5px;
+}
+
+.button-panel{
+  background-image: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+.button-panel:active{
+  background-image:none !important;
+  outline:0;-webkit-box-shadow:inset 0 3px 5px rgba(0,0,0,0.125) !important;
+  box-shadow:inset 0 3px 5px rgba(0,0,0,0.125) !important;
+}
+
+.display-none{
+  display: none;
+}
+
+.square-highlight{
+  -webkit-box-shadow: inset 0 0 3px 3px yellow;
+  -moz-box-shadow: inset 0 0 3px 3px yellow;
+  box-shadow: inset 0 0 3px 3px yellow;  
+}
+
+h4{
+  text-align: center;
+  align-content: center;
 }

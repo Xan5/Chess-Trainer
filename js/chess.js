@@ -254,13 +254,13 @@ window['Chess'] = window['Chess'] || function(fen) {
     };
 
     /* 1st criterion: 6 space-seperated fields? */
-    var tokens = fen.split(/\s+/);
+    var tokens = fen.split(/\s+/g);
     if (tokens.length !== 6) {
       return {valid: false, error_number: 1, error: errors[1]};
     }
 
     /* 2nd criterion: move number field is a integer value > 0? */
-    if (isNaN(tokens[5]) || (parseInt(tokens[5], 10) <= 0)) {
+    if (isNaN(tokens[5]) || (parseInt(tokens[5], 10) < 0)) {
       return {valid: false, error_number: 2, error: errors[2]};
     }
 
@@ -1413,7 +1413,7 @@ window['Chess'] = window['Chess'] || function(fen) {
         if (from >=0 && to >=0 && flags) {
           return build_move(board, from, to, flags, promotion);
         } else if (move.length > 0) {
-          /* alert(move); // error in PGN, or in parsing. */
+          throw "Error in PGN, or in parsing."
         }
       }
 

@@ -1,7 +1,138 @@
 <div>
     <script src="js/chessboard.js"></script>
-    <h1>ddddddddddd</h1>
-    <script>
-    console.log(this.params);
-    </script>
+    <div class="row">
+        <br>
+        <div class="col-md-1 col-lg-2"></div>
+        <div class="col-md-7 col-lg-6">
+                <div id="board" style="margin-left: auto; margin-right: auto;" class="context-menu-board board"></div>
+                <div id="load-dialog" class="ui-dialog dialog wrapper" title="Analyze game">
+                        <div class="dialog-content">
+                            <div class="form-group">
+                                    <input type="text" class="form-control" id="load-fen" placeholder="Paste FEN here">
+                            </div>
+                            <div class="form-group">
+                                    <input type="text" class="form-control" id="load-pgn" placeholder="Paste PGN here">
+                            </div>
+                            <div style="margin-top: 20px">
+                                <button id="loadFENButton" type="button" class="btn btn-secondary dialog-button">Load FEN</button>
+                                <button id="loadPGNButton" type="button" class="new-game-button btn btn-secondary dialog-button">Load PGN</button>
+                            </div>
+                        </div>
+                </div>
+                <div id="error-dialog" class="ui-dialog dialog wrapper" title="Loading Error">
+                        <div class="dialog-content">
+                            </br>
+                            <h4 id="error-desc"></h4>
+                            </br>
+                        </br>
+                            <div>
+                                <button id="okButton" type="button" class="btn btn-secondary dialog-button">Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                <div id="promotion-dialog"> 
+                  <ol id="promote-to">
+                    <li class="ui-state-default"><span class="piece-name">q</span><img class="promotion-piece-q promotion-piece" /></li>
+                    <li class="ui-state-default"><span class="piece-name">r</span><img class="promotion-piece-r promotion-piece" /></li>
+                    <li class="ui-state-default"><span class="piece-name">n</span><img class="promotion-piece-n promotion-piece" /></li>
+                    <li class="ui-state-default"><span class="piece-name">b</span><img class="promotion-piece-b promotion-piece" /></li>
+                  </ol>
+                </div>
+                <div id="scoreBar">
+                    <div class="scoreBarOuter" style="margin-left: auto; margin-right: auto;" >
+                        <div class="scoreBarInner"></div>
+                    </div>        
+                </div>
+        </div>
+        <div class="col-md-3 col-lg-2">
+            <ul id="pgn" class="list-group-item table list-group mb-3"></ul>
+            <form class="card p-1 alingned-content">
+                <div class="btn-group movesPanel">
+                    <button id="firstButton" type="button" class="btn btn-secondary button-panel"><span class="glyphicon glyphicon-fast-backward"></span></button>
+                    <button id="previousButton" type="button" class="btn btn-secondary button-panel"><span class="glyphicon glyphicon-step-backward"></span></button>
+                    <button id="nextButton" type="button" class="btn btn-secondary button-panel"><span class="glyphicon glyphicon-step-forward"></span></button>
+                    <button id="lastButton" type="button" class="btn btn-secondary button-panel"><span class="glyphicon glyphicon-fast-forward"></span></button>
+                </div>
+                <button id="loadButton" type="button" class="new-game-button btn btn-lg btn-secondary btn-block">Analyze Game</button>
+            </form>
+            <h4 id="engineStatus"></h4>
+        </div>
+        <div class="col-md-1 col-lg-2"></div>
+        <ul class="contextmenu">
+                <li><a type="button" onclick="getFEN()">Copy FEN to clipboard</a></li>
+                <li><a type="button" onclick="getPGN()">Copy PGN to clipboard</a></li>
+              </ul>
+  </div>
+  <script src="../js/analyzeEngine.js"></script>
+  <script>
+    var wait_for_script;
+    var newGame = function (){};
+    
+
+    /// We can load Stockfish.js via Web Workers or directly via a <script> tag.
+    /// Web Workers are better since they don't block the UI, but they are not always avaiable.
+    (function fix_workers()
+    {
+      var script_tag;
+      /// Does the browser support web workers?  If not, include stockfish.js directly.
+      if (!Worker || (location && location.protocol === "file:")) {
+        var script_tag  = document.createElement("script");
+        script_tag.type ="text/javascript";
+        script_tag.src  = "../js/stockfish.js";
+        script_tag.onload = init;
+        document.getElementsByTagName("head")[0].appendChild(script_tag);
+        wait_for_script = true;
+      }
+    }());
+
+    function copyToClipboard(text) {
+        if (window.clipboardData && window.clipboardData.setData) {
+            return clipboardData.setData("Text", text); 
+        } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+            var textarea = document.createElement("textarea");
+            textarea.textContent = text;
+            textarea.style.position = "fixed";
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                return document.execCommand("copy");
+            } catch (ex) {
+                console.warn("Coping to clipboard failed.", ex);
+                return false;
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+    }
+
+    (function init()
+    {
+      var game = analyzeEngine();
+
+      getFEN = function getFEN(){
+          var fen = game.getFEN();
+          copyToClipboard(fen);
+      }
+
+      getPGN = function getPGN(){
+          var pgn = game.getPGN();
+          copyToClipboard(pgn);
+      }
+
+      newGame = function newGame() {
+          game.reset();
+          game.setSkillLevel(5);
+          game.start();
+      };
+  
+      newGame();
+    }());
+    
+    /// If we load Stockfish.js via a <script> tag, we need to wait until it loads.
+    if (!wait_for_script) {
+      //document.addEventListener("DOMContentLoaded", init);
+    }
+
+      
+  </script>
 </div>

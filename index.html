@@ -11,6 +11,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="js/sammy.js"></script>
     <script src="js/chess.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase-database.js"></script>
 
     <script src="app.js"></script>
 
@@ -23,20 +25,19 @@
                 <div class="navbar-header">
                 <a class="navbar-brand" href="#">Chess Trainer</a>
                 </div>
-                <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#play">Play with AI</a></li>
+                <ul class="menu nav navbar-nav">
+                <li><a href="#playai">Play with AI</a></li>
                 <li><a href="#puzzle">Chess puzzles</a></li>
                 <li><a href="#analyze">Analyze game</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
                 </ul>
             </div>
         </nav>
     </div>
     <div id="container" class="container"></div>
-    
+    <script>
+        $(".menu > li").click(function(){
+            $(this).addClass("active").siblings().removeClass("active");
+        });    
+    </script>
 </body>
 </html>

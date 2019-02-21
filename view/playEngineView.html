@@ -4,7 +4,7 @@
         <br>
         <div class="col-md-1 col-lg-2"></div>
         <div class="col-md-7 col-lg-6">
-                <div id="board" class="context-menu-board board"></div>
+                <div id="board" style="margin-left: auto; margin-right: auto;" class="context-menu-board board"></div>
                 <div id="start-dialog" class="ui-dialog dialog wrapper" title="Create new game">
                         <div class="dialog-content">
                             <label>Difficulty level: </label>
@@ -31,7 +31,7 @@
                 </div>
                 <div id="end-dialog" class="ui-dialog dialog wrapper" title="Game over">
                     <div class="dialog-content">
-                        <h5 id="end-info"></h5>
+                        <h4 id="end-info"></h4>
                         <h3 id="end-winner"></h3>
                         </br>
                         <div>
@@ -39,7 +39,7 @@
                             <button type="button" class="new-game-button btn btn-secondary dialog-button">New Game</button>
                         </div>
                     </div>
-            </div>
+                </div>
                 <div id="promotion-dialog">
                   <ol id="promote-to">
                     <li class="ui-state-default"><span class="piece-name">q</span><img class="promotion-piece-q promotion-piece" /></li>
@@ -49,7 +49,7 @@
                   </ol>
                 </div>
                 <div id="scoreBar">
-                    <div class="scoreBarOuter">
+                    <div class="scoreBarOuter" style="margin-left: auto; margin-right: auto;">
                         <div class="scoreBarInner"></div>
                     </div>        
                 </div>
@@ -57,10 +57,8 @@
         <div class="col-md-3 col-lg-2">
             <ul id="pgn" class="list-group-item table list-group mb-3"></ul>
             <form class="card p-1">
-                <div class="input-group">
-                    <button id="undoButton" type="button" class="btn btn-lg btn-secondary btn-block" onclick="undo()">Undo</button>
-                    <button type="button" class="new-game-button btn btn-lg btn-secondary btn-block">New Game</button>
-                </div>
+                <button id="undoButton" type="button" class="btn btn-lg btn-secondary btn-block" onclick="undo()">Undo</button>
+                <button type="button" class="new-game-button btn btn-lg btn-secondary btn-block">New Game</button>
             </form>
             <h4 id="engineStatus"></h4>
         </div>

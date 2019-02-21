@@ -1,11 +1,10 @@
 <div>
     <script src="js/chessboard.js"></script>
-    
     <div class="row">
         <br>
             <div class="col-md-1 col-lg-2"></div>
             <div class="col-md-7 col-lg-6">
-                <div id="board"  class="board context-menu-board"></div>
+                <div id="board" style="margin-left: auto; margin-right: auto;" class="board context-menu-board"></div>
                 <div id="promotion-dialog">
                   <ol id="promote-to">
                     <li class="ui-state-default"><span class="piece-name">q</span><img class="promotion-piece-q promotion-piece" /></li>
@@ -18,55 +17,51 @@
             <div class="col-md-3 col-lg-2">
                 <ul class="table-no-scroll list-group mb-3">
                   <li class="list-group-item d-flex justify-content-between lh-condensed">
-                    <div>
-                      <h5 class="my-0">Puzzle: </h5>
-                      <span id="puzzleId" class="text-muted">Number</span>
+                    <div style="height: 100px;">
+                      <h5 class="my-0">Description: </h5>
+                      <div style="text-align: center;">
+                        <span id="puzzleDesc" class="text-muted">-</span>
+                      </div>
                     </div>
                   </li>
                   <li class="list-group-item d-flex justify-content-between lh-condensed">
-                    <div>
-                      <h6 class="my-0">Dificulity: </h6>
-                      <small id="puzzleDiff" class="text-muted">Number</small>
-                    </div>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between lh-condensed">
-                    <div>
-                      <h6 class="my-0">Your ranking:</h6>
-                      <small id="yoursRank" class="text-muted">1562</small>
+                    <div style="height: 53px;">
+                      <h5 class="my-0">Dificulity: </h5>
+                      <div style="text-align: center;">
+                        <span id="puzzleDiff" class="text-muted">-</span>
+                      </div>
                     </div>
                   </li>
                   <li class="list-group-item d-flex justify-content-between bg-light">
-                    <div >
-                      <h6 class="my-0">Last puzzle:</h6>
-                      <small id="yoursLast" class="text-success">+10</small>
+                    <div style="height: 53px;">
+                      <h5 class="my-0">Score:</h5>
+                      <div style="text-align: center;">
+                        <b id="winScore" class="text-success">0</b>
+                        <b class="text-muted"> - </b>
+                        <b id="loseScore" class="text-danger">0</b>
+                      </div>
                     </div>
                   </li>
                 </ul>
       
                 <form class="card p-1">
-                  <div class="input-group">
-                    <button id="nextPuzzleButton" type="button" onclick="newPuzzle()" class="btn btn-lg btn-secondary btn-block">Next puzzle</button>
-                    <button id="showSolutionButton" type="button" class="btn btn-lg btn-secondary btn-block">Show solution</button>
-                  </div>
+                  <button id="nextPuzzleButton" type="button" onclick="newPuzzle()" class="btn btn-lg btn-secondary btn-block">Next puzzle</button>
+                  <button id="showSolutionButton" type="button" class="btn btn-lg btn-secondary btn-block">Show solution</button>
                 </form>
             </div>
             <div class="col-md-1 col-lg-2"></div>
       </div>
-<script src="js/puzzleEngine.js"></script>
+      <script src="js/puzzleEngine.js"></script>
     <script>     
         (function init()
         {
           var game = puzzleEngine();
-          undo = function undo(){
-              game.undo();
-          }
-    
+   
           newPuzzle = function newPuzzle() {
-              game.reset();
               game.start();
           };
       
-          newPuzzle();
+          game.reset();
         }());
       </script>
 </div>

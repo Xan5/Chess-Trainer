@@ -1,13 +1,7 @@
 (function ($) {
     var app = $.sammy(function () {
-
-        this.get('#', function (context) {
-            context.render('/view/puzzleView.html', function(output) {
-                $('#container').html(output);
-            });
-        });
-
-        this.get('#play', function (context) {
+        
+        this.get('#playai', function (context) {
             context.render('/view/playEngineView.html', function(output) {
                 $('#container').html(output);
             });
@@ -32,12 +26,11 @@
         });
 
         this.get('#:unknown', function () {
-            console.log("Unknown routing path: " + this.params.unknown);
-            this.redirect('#');
+            this.redirect('#playai');
         });
     });
 
     $(function () {
-        app.run('#');
+        app.run('#playai');
     });
 })(jQuery);
