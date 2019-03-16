@@ -85,10 +85,9 @@ function puzzleEngine() {
     $("#promote-to").selectable({
         stop: function() {
           $( ".ui-selected", this ).each(function() {
-            var selectable = $('#promote-to li');
-            var index = selectable.index(this);
+            var index = $('#promote-to li').index(this);
             if (index > -1) {
-              var promoteToHtml = selectable[index].innerHTML;
+              var promoteToHtml = $('#promote-to li')[index].innerHTML;
               var span = $('<div>' + promoteToHtml + '</div>').find('span');
               promoteTo = span[0].innerHTML;
             }
@@ -105,11 +104,12 @@ function puzzleEngine() {
     var onDialogClose = function() {
         promoting = false;
         //Check if move is valid to puzzle
-        if(move.san !== moveList[moveNumber]) return puzzleFailed();
-
-        if(moveList[moveNumber] !== promotionMove.san + promoteTo) return puzzleFailed();
-        moveNumber++;    
         promotionMove.promotion = promoteTo;
+        var newMove = game.move(promotionMove);
+        game.undo();
+        promotionMove.promotion = promoteTo;
+        if(moveList[moveNumber] !== newMove.san) return puzzleFailed();
+        moveNumber++;    
         game.move(promotionMove);
         moveNext();
     }
@@ -177,13 +177,13 @@ function puzzleEngine() {
     };
     
     var onDrop = function(source, target) {
-        var move = game.move({
+        var newMove = game.move({
             from: source,
             to: target,
             promotion: 'q'
         });
         // Check if move is legal to puzzle
-        if (move === null) return 'snapback';
+        if (newMove === null) return 'snapback';
         else game.undo();
 
         var source_rank = source.substring(2,1);
@@ -192,7 +192,7 @@ function puzzleEngine() {
         if (piece === 'p' &&
             ((source_rank === '7' && target_rank === '8') || (source_rank === '2' && target_rank === '1'))) {
             promoting = true;
-            promotionMove = move;
+            promotionMove = jQuery.extend( true, {}, newMove);
 
             $('#promotion-dialog').dialog("open").dialog('widget').position({
                 my: 'middle',
@@ -203,11 +203,11 @@ function puzzleEngine() {
         }
 
         //Check if move is valid to puzzle
-        if(move.san !== moveList[moveNumber]) return puzzleFailed();
+        if(newMove.san !== moveList[moveNumber]) return puzzleFailed();
 
         //Make move
         moveNumber++;
-        game.move(move);
+        game.move(newMove);
         moveNext();
     };
 

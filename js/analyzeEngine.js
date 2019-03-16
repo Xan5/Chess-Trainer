@@ -11,9 +11,8 @@ function analyzeEngine() {
     promoting = false;
     var boardSel = $('#board');
 
-    function uciCmd(cmd, which) {
-        console.log("UCI: " + cmd); //Debug
-        (which || engine).postMessage(cmd);
+    function uciCmd(cmd) {
+        engine.postMessage(cmd);
     }
     uciCmd('uci');
 
@@ -79,13 +78,13 @@ function analyzeEngine() {
     });
     $( "#loadFENButton" ).click(function() {
         var fen = $("#load-fen").val();
-        loadFEN(fen);
         $( "#load-dialog" ).dialog("close");
+        loadFEN(fen);
     });
     $( "#loadPGNButton" ).click(function() {
         var pgn = $("#load-pgn").val();
-        loadPGN(pgn);
         $( "#load-dialog" ).dialog("close");
+        loadPGN(pgn);
     });
     $( "#error-dialog" ).dialog({ 
         autoOpen: false,
@@ -170,19 +169,14 @@ function analyzeEngine() {
             if(engineStatus.score) {
                 var status = '';
                 var score = parseFloat(engineStatus.score);
-                if(playerColor == 'black') score *= -1;
+                if(game.turn() == 'black') score *= -1;
                 if (score > 20) score = 20;
                 if (score < -20) score = -20;
-                if(engineStatus.score.substr(0, 4) === "Mate"){
-                    if(playerColor == 'white'){
-                        score = 20;
-                    }else score = -20;
-                }
                 score += 20;
                 score *= 13.45;
                 lastScore = score;
                 setScoreBar(score);
-                status += (engineStatus.score.substr(0, 4) === "Mate" ? " " : ' Score: ') + engineStatus.score;
+                status += (engineStatus.score.substr(0, 4) === "Mate" ? " " : ' Score: ') + (playerColor === 'black' && engineStatus.score.substr(0, 4) !== "Mate"? "-":"") + engineStatus.score;
                 $('#engineStatus').html(status);
             }
         } 
@@ -191,8 +185,6 @@ function analyzeEngine() {
 
     //Check if game ended
     function checkGameOver(){
-        console.log("end");
-
         if (game.game_over()) {
             var winner;
             if(game.in_stalemate()){
@@ -207,7 +199,6 @@ function analyzeEngine() {
                 $('#engineStatus').html(winner);
             }
             if(game.in_checkmate()){
-                console.log("end");
                 winner = game.turn() == 'w' ? 'Black won!' : 'White won!';
                 $('#engineStatus').html(winner);
             }
@@ -222,7 +213,6 @@ function analyzeEngine() {
             $( "#lastButton" ).addClass("disabled").removeClass("button-panel");    
             return;
         }
-        console.log(invalidMoveNumber + " inv | mv " + moveNumber + "h.l "+ historyLength);
         var moves = game.history({verbose: true});
         var move = moves[moves.length -1];
         if(history[moveNumber -1].from === move.from && 
@@ -293,7 +283,6 @@ function analyzeEngine() {
         } else {
             line = event;
         }
-        console.log("Reply: " + line);  //Debug
         if(line == 'uciok') {
             engineStatus.engineLoaded = true;
         } else if(line == 'readyok') {
@@ -361,7 +350,6 @@ function analyzeEngine() {
             to: target,
             promotion: 'q'
         });
-        console.log(move);
 
         //Check for illegal move
         if (move === null) return 'snapback';
@@ -442,32 +430,35 @@ function analyzeEngine() {
             game.reset();
             return;
         }
+
         var shallowHistory = game.history({verbose: true})
         history = jQuery.extend( true, {}, shallowHistory);
         historyLength = shallowHistory.length;
         for(var i = 0; i < historyLength; ++i){
             game.undo();
         }
+
         moveNumber = 0; 
         for(var i = 0; i < historyLength; ++i){
             moveNext(history);  
         }
+       
         addAllmovesToList();
         validHistory = true;
         fen = "start";
-        board.position(game.fen());
+        $( "#start-dialog" ).dialog("close");
         $( "#nextButton" ).addClass("button-panel").removeClass("disabled");
         $( "#lastButton" ).addClass("button-panel").removeClass("disabled");
         clearHighLight();
+
+        board.position(game.fen());
         prepareMove();
     }
 
     function loadFEN(_fen){
         $("#pgn li").remove();
         fen = _fen;
-        console.log(_fen);    
         var result = game.load(_fen); 
-        console.log(game.validate_fen(fen));   
         if(result == false){
             $('#error-desc').html("FEN is empty or has wrong format.");
             $( "#load-dialog" ).dialog("close");
@@ -552,7 +543,7 @@ function analyzeEngine() {
             uciCmd('isready');
             if(window.location.href.match(/1.+/) !== null){
                 var pgn = window.location.href.match(/1.+/)[0];
-                pgn = pgn.replace(/(%)/g,' ');
+                pgn = pgn.replace(/(%20)/g,' ');
                 pgn = pgn.replace(/(#)/g,'');
                 var options = {
                     sloppy: true

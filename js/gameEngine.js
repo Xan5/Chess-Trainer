@@ -50,7 +50,7 @@ function gameEngine() {
         var pgn = game.pgn();
         var location = window.location.href;
         pgn = pgn.replace(/(?<=(\d+\W))\s/g, '');
-        window.location.href = location.replace( 'play', 'analyze/'+ pgn);
+        window.location.href = location.replace( 'playai', 'analyze/'+ pgn);
     });
     
     $('.contextmenu').hide();
@@ -130,17 +130,12 @@ function gameEngine() {
                 if(playerColor === 'black' ) {score *= -1;}
                 if (score > 20) score = 20;
                 if (score < -20) score = -20;
-                if(engineStatus.score.substr(0, 4) === "Mate"){
-                    if(playerColor == 'white'){
-                        score = 20;
-                    }else score = -20;
-                }
                 score += 20;
                 score *= 13.45;
                 lastScore = score;
                 setScoreBar(score);
                 if(playerColor === 'black'){ engineStatus.score = engineStatus.score.replace('-', '') }
-                status += (engineStatus.score.substr(0, 4) === "Mate" ? " " : ' Score: ') + (playerColor === 'black'? "-":"") + engineStatus.score;
+                status += (engineStatus.score.substr(0, 4) === "Mate" ? " " : ' Score: ') + (playerColor === 'black' && engineStatus.score.substr(0, 4) !== "Mate"? "-":"") + engineStatus.score;
                 $('#engineStatus').html(status);
             }
         } 
@@ -224,7 +219,7 @@ function gameEngine() {
         } else {
             line = event;
         }
-        console.log("Reply: " + line);  //Debug
+        //console.log("Reply: " + line);  //Debug
         if(line == 'uciok') {
             engineStatus.engineLoaded = true;
         } else if(line == 'readyok') {
@@ -278,7 +273,6 @@ function gameEngine() {
     };
 
     var onDrop = function(source, target) {
-        //removeGreySquares();
         
         var move = game.move({
             from: source,
@@ -334,50 +328,13 @@ function gameEngine() {
         $("#pgn li:last").remove();
     }
 
-    //#region Legal moves highlight
-    var removeGreySquares = function() {
-        $('#board .square-55d63').css('background', '');
-    };
-    
-    var greySquare = function(square) {
-        var squareEl = $('#board .square-' + square);
-        
-        var background = '#a9a9a9';
-        if (squareEl.hasClass('black-3c85d') === true) {
-        background = '#696969';
-        }
-    
-        squareEl.css('background', background);
-    };
-
-    var onMouseoverSquare = function(square, piece) {
-    var moves = game.moves({
-        square: square,
-        verbose: true
-    });
-
-    if (moves.length === 0) return;
-
-    greySquare(square);
-
-    for (var i = 0; i < moves.length; i++) {
-        greySquare(moves[i].to);
-    }
-    };
-
-    var onMouseoutSquare = function(square, piece) {
-    removeGreySquares();
-    };
-    //#endregion
-
     var cfg = {
         draggable: true,
         position: 'start',
         onDragStart: onDragStart,
         onDrop: onDrop,
         pieceTheme: pieceTheme,
-        //onMouseoutSquare: onMouseoutSquare,//
-        //onMouseoverSquare: onMouseoverSquare,//
+
         onSnapEnd: onSnapEnd,
         onMoveEnd: onMoveEnd
     };
